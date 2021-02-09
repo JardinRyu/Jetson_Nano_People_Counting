@@ -8,10 +8,10 @@ from gi.repository import Gst
 
 
 class USBCamera():
-    def __init__(self, width=300, height=300):
+    def __init__(self, width=640, height=480):
         self.cap = cv2.VideoCapture(0)
-        self.width = width
-        self.height = height
+        self.cap.set(3, width)
+        self.cap.set(4, height)
 
     def getFrame(self):
         rtn_val, frame = self.cap.read()

@@ -7,7 +7,7 @@ import sys
 from tensorflow.python.compiler.tensorrt import trt_convert as trt
 
 """ TensorFlow detection using TRT optimized graph"""
-class ObjectDetection():
+class Detector():
     def __init__(self, detection_model_path = './data/ssd_mobilenet_v1_coco_trt_graph.pb'):
         self.detection_model_path = detection_model_path
         self.labels = self._getLabels()
@@ -18,19 +18,7 @@ class ObjectDetection():
             for line in fh:
                 label, des = line.strip().split(': ', 1)
                 labels[label] = des.strip()
-        return labels
-
-    def detect(self, image):
-        image = cv2.resize(image, (300, 300))
-        image_expanded = np.expand_dims(image, axis=0)
-        
-        (boxes, scores, classes, num_detections) = self.sess.run(
-            [self.boxes, self.scores, self.classes, self.num_detections],
-            feed_dict={self.image_tensor: image_expanded})
-        
-        boxes[0, :, [0, 2]] = (boxes[0, :, [0, 2]]*image.shape[0])
-        boxes[0, :, [1, 3]] = (boxes[0, :, [1, 3]]*image.shape[1])
-        return np.squeeze(boxes).astype(int), np.squeeze(scores), classes
+        return labels    
 
     def _setupTensors(self):
         self.image_tensor = self.detection_graph.get_tensor_by_name('image_tensor:0')        
@@ -57,3 +45,31 @@ class ObjectDetection():
         tf.reset_default_graph()
         self.tf_sess.close()
         print ("Cleanly exited ObjectDetector")
+
+    def detect(self, image):
+        #image = cv2.resize(image, (300, 300))
+        image_expanded = np.expand_dims(image, axis=0)
+        
+        (boxes, scores, classes, num_detections) = self.sess.run(
+            [self.boxes, self.scores, self.classes, self.num_detections],
+            feed_dict={self.image_tensor: image_expanded})
+        
+        boxes[0, :, [0, 2]] = (boxes[0, :, [0, 2]]*image.shape[0])
+        boxes[0, :, [1, 3]] = (boxes[0, :, [1, 3]]*image.shape[1])
+        
+        boxes = np.squeeze(boxes).astype(int)
+        scores = np.squeeze(scores)
+
+        det_boxes = boxes[np.argwhere(scores>0.3).reshape(-1)]
+        det_scores = scores[np.argwhere(scores>0.3).reshape(-1)]
+
+        det_n = len(det_boxes)
+        result = []
+
+        if det_n > 0:
+            for i in range(det_n):
+                box = det_boxes[i] # xmin = box[0], ymin = box[2], xmax = box[1], ymax = box[3]                
+                bbox = [box[1], box[0], box[3], box[2]]
+                result.append(bbox)
+        
+        return result
