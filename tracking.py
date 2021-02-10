@@ -1,7 +1,7 @@
 import cv2
 import imutils
 import numpy as np
-from ssd_test import Detector
+from src.detection import Detector
 
 from filterpy.kalman import KalmanFilter
 from numba import jit
