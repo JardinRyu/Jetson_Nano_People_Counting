@@ -179,6 +179,7 @@ class VideoCamera:
         self.frame += 1
 
         r, img = self.cap.read()
+        self.odapi.initializeSession()
 
         if r is False:
             return None
@@ -186,10 +187,10 @@ class VideoCamera:
         while True:
             r, img = self.cap.read()
 
-            img = imutils.resize(img, width=1000)
+            img = cv2.resize(img, (300, 300))
             boxes = self.odapi.detect(img)
             boxes = np.array(boxes)
-            print(boxes)
+            #print(boxes)
 
             trks = np.zeros((len(self.trackers), 5))
             to_del = []

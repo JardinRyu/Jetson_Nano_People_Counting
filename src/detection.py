@@ -21,11 +21,11 @@ class Detector():
         return labels    
 
     def _setupTensors(self):
-        self.image_tensor = self.detection_graph.get_tensor_by_name('image_tensor:0')        
-        self.boxes = self.detection_graph.get_tensor_by_name('detection_boxes:0')        
-        self.scores = self.detection_graph.get_tensor_by_name('detection_scores:0')
-        self.classes = self.detection_graph.get_tensor_by_name('detection_classes:0')
-        self.num_detections = self.detection_graph.get_tensor_by_name('num_detections:0')
+        self.image_tensor = self.tf_sess.graph.get_tensor_by_name('image_tensor:0')        
+        self.boxes = self.tf_sess.graph.get_tensor_by_name('detection_boxes:0')        
+        self.scores = self.tf_sess.graph.get_tensor_by_name('detection_scores:0')
+        self.classes = self.tf_sess.graph.get_tensor_by_name('detection_classes:0')
+        self.num_detections = self.tf_sess.graph.get_tensor_by_name('num_detections:0')
 
     def _getTRTGraph(self):
         with tf.gfile.FastGFile(self.detection_model_path, "rb") as f:
@@ -50,7 +50,7 @@ class Detector():
         #image = cv2.resize(image, (300, 300))
         image_expanded = np.expand_dims(image, axis=0)
         
-        (boxes, scores, classes, num_detections) = self.sess.run(
+        (boxes, scores, classes, num_detections) = self.tf_sess.run(
             [self.boxes, self.scores, self.classes, self.num_detections],
             feed_dict={self.image_tensor: image_expanded})
         
