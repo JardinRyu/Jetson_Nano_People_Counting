@@ -65,11 +65,13 @@ class Detector():
 
         det_n = len(det_boxes)
         result = []
+        classes = classes[0]
 
         if det_n > 0:
             for i in range(det_n):
-                box = det_boxes[i] # xmin = box[0], ymin = box[2], xmax = box[1], ymax = box[3]                
-                bbox = [box[1], box[0], box[3], box[2]]
-                result.append(bbox)
-        
+                if int(classes[i]) == 1:
+                    box = det_boxes[i] # xmin = box[0], ymin = box[2], xmax = box[1], ymax = box[3]                
+                    bbox = [box[1], box[0], box[3], box[2]]
+                    result.append(bbox)
+            
         return result
