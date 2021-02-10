@@ -1,5 +1,5 @@
-#from tensorflow.python.compiler.tensorrt import trt_convert as trt
-import tensorflow.contrib.tensorrt as trt
+from tensorflow.python.compiler.tensorrt import trt_convert as trt
+#import tensorflow.contrib.tensorrt as trt
 import sys
 import os
 try:
@@ -20,7 +20,7 @@ print ("Building detection graph from model " + MODEL + "...")
 frozen_graph, input_names, output_names = build_detection_graph(
     config=config_path,
     checkpoint=checkpoint_path,
-    #force_nms_cpu=False,
+    force_nms_cpu=False,
     score_threshold=0.3,
     #iou_threshold=0.5,
     batch_size=1
