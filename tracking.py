@@ -223,23 +223,21 @@ class Tracking:
 
                     if  idstp[trk.id][0][1] < H // 2 and cy > H // 2 and idcnt[trk.id]:
                         incnt += 1
-                        idcnt[trk.id] == True
+                        print("id: " + str(trk.id) + " - IN ")
+                        idcnt[trk.id] = True
                     elif  idstp[trk.id][0][1] > H // 2 and cy < H // 2 and idcnt[trk.id]:
                         outcnt += 1
-                        idcnt[trk.id] == True
+                        print("id: " + str(trk.id) + " - OUT ")
+                        idcnt[trk.id] = True
 
                     cv2.rectangle(img, (xmin, ymin), (xmax, ymax), (0, 0, 255), 2)
-                    cv2.putText(img, "id: " + str(trk.id), (int(xmin) - 10, int(ymin) - 10), cv2.FONT_HERSHEY_SIMPLEX, 1,
-                                (0, 0, 255), 2)
+                    cv2.putText(img, "id: " + str(trk.id), (int(xmin) - 10, int(ymin) - 10), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
 
-            cv2.putText(img, "Total: " + str(len(self.trackers)), (20, 25), cv2.FONT_HERSHEY_DUPLEX, 1,
-                        (255, 255, 255), 2)
+            cv2.putText(img, "Total: " + str(len(self.trackers)), (20, 25), cv2.FONT_HERSHEY_DUPLEX, 1, (255, 255, 255), 1)
 
-            cv2.line(frame, (0, H // 2), (W, H // 2), (255, 0, 0), 3)
-            cv2.putText(img, "IN: " + str(incnt), (20, 25), cv2.FONT_HERSHEY_DUPLEX, 1,
-                        (255, 255, 255), 2)
-            cv2.putText(img, "OUT: " + str(outcnt), (20, 25), cv2.FONT_HERSHEY_DUPLEX, 1,
-                        (255, 255, 255), 2)
+            cv2.line(img, (0, H // 2), (W, H // 2), (255, 0, 0), 3)
+            cv2.putText(img, "IN: " + str(incnt), (20, H // 2 - 10), cv2.FONT_HERSHEY_DUPLEX, 1, (255, 255, 255), 1)
+            cv2.putText(img, "OUT: " + str(outcnt), (20, H // 2 + 30), cv2.FONT_HERSHEY_DUPLEX, 1, (255, 255, 255), 1)
 
             # create and initialise new trackers for unmatched detections
             for i in unmatched_dets:
