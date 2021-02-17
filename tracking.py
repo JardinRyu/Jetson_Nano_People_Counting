@@ -178,8 +178,8 @@ class Tracking:
     def get_frame(self):
         print("frame number ", self.frame)
         self.frame += 1
-        idstp = collections.defualtdict(list)
-        idcnt = collections.defualtdict(lambda: False)
+        idstp = collections.defaultdict(list)
+        idcnt = collections.defaultdict(lambda: False)
         incnt, outcnt = 0, 0
 
         r, img = self.cap.read()
