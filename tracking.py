@@ -1,8 +1,9 @@
 import cv2
 import imutils
 import numpy as np
-from src.detection import Detector
+import collections
 
+from src.detection import Detector
 from filterpy.kalman import KalmanFilter
 from numba import jit
 from sklearn.utils.linear_assignment_ import linear_assignment
@@ -160,7 +161,7 @@ def associate_detections_to_trackers(detections, trackers, iou_threshold=0.3):
     return matches, np.array(unmatched_detections), np.array(unmatched_trackers)
 
 
-class VideoCamera:
+class Tracking:
     def __init__(self):
         self.frame = 0
         self.max_age = 15
@@ -177,6 +178,9 @@ class VideoCamera:
     def get_frame(self):
         print("frame number ", self.frame)
         self.frame += 1
+        idstp = collections.defualtdict(list)
+        idcnt = collections.defualtdict(lambda: False)
+        incnt, outcnt = 0, 0
 
         r, img = self.cap.read()
         self.odapi.initializeSession()
@@ -191,6 +195,8 @@ class VideoCamera:
             boxes = self.odapi.detect(img)
             boxes = np.array(boxes)
             #print(boxes)
+
+            H, W = img.shape[:2]
 
             trks = np.zeros((len(self.trackers), 5))
             to_del = []
@@ -213,12 +219,27 @@ class VideoCamera:
 
                     xmin, ymin, xmax, ymax = boxes[d, :][0]
 
+                    cx, cy = int((xmin + xmax) / 2), int((ymin + ymax) / 2)
+
+                    if  idstp[trk.id][0][1] < H // 2 and cy > H // 2 and idcnt[trk.id]:
+                        incnt += 1
+                        idcnt[trk.id] == True
+                    elif  idstp[trk.id][0][1] > H // 2 and cy < H // 2 and idcnt[trk.id]:
+                        outcnt += 1
+                        idcnt[trk.id] == True
+
                     cv2.rectangle(img, (xmin, ymin), (xmax, ymax), (0, 0, 255), 2)
-                    cv2.putText(img, str(trk.id), (int(xmin) - 10, int(ymin) - 10), cv2.FONT_HERSHEY_SIMPLEX, 1,
+                    cv2.putText(img, "id: " + str(trk.id), (int(xmin) - 10, int(ymin) - 10), cv2.FONT_HERSHEY_SIMPLEX, 1,
                                 (0, 0, 255), 2)
 
-                    cv2.putText(img, "Total: " + str(len(self.trackers)), (20, 25), cv2.FONT_HERSHEY_DUPLEX, 1,
-                                (255, 255, 255), 2)
+            cv2.putText(img, "Total: " + str(len(self.trackers)), (20, 25), cv2.FONT_HERSHEY_DUPLEX, 1,
+                        (255, 255, 255), 2)
+
+            cv2.line(frame, (0, H // 2), (W, H // 2), (255, 0, 0), 3)
+            cv2.putText(img, "IN: " + str(incnt), (20, 25), cv2.FONT_HERSHEY_DUPLEX, 1,
+                        (255, 255, 255), 2)
+            cv2.putText(img, "OUT: " + str(outcnt), (20, 25), cv2.FONT_HERSHEY_DUPLEX, 1,
+                        (255, 255, 255), 2)
 
             # create and initialise new trackers for unmatched detections
             for i in unmatched_dets:
@@ -226,6 +247,9 @@ class VideoCamera:
                 self.trackers.append(trk)
 
                 trk.id = len(self.trackers)
+
+                u, v = trk.kf.x[0], trk.kf.x[1]
+                idstp[trk.id].append([u, v])
 
                 if trk.time_since_update > self.max_age:
                     self.trackers.pop(i)
@@ -241,5 +265,5 @@ class VideoCamera:
         return 0
 
 if __name__ == '__main__':
-    video_process = VideoCamera()
-    video_process.get_frame()
+    tracking_test = Tracking()
+    tracking_test.get_frame()

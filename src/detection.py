@@ -10,15 +10,15 @@ from tensorflow.python.compiler.tensorrt import trt_convert as trt
 class Detector():
     def __init__(self, detection_model_path = './data/ssd_mobilenet_v1_coco_trt_graph.pb'):
         self.detection_model_path = detection_model_path
-        self.labels = self._getLabels()
+        #self.labels = self._getLabels()
 
-    def _getLabels(self):
-        labels = {}
-        with open('./data/coco_classes.json') as fh:
-            for line in fh:
-                label, des = line.strip().split(': ', 1)
-                labels[label] = des.strip()
-        return labels    
+    #def _getLabels(self):
+    #    labels = {}
+    #    with open('./data/coco_classes.json') as fh:
+    #        for line in fh:
+    #            label, des = line.strip().split(': ', 1)
+    #            labels[label] = des.strip()
+    #    return labels    
 
     def _setupTensors(self):
         self.image_tensor = self.tf_sess.graph.get_tensor_by_name('image_tensor:0')        
