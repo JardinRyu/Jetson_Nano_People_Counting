@@ -36,9 +36,10 @@ def _postprocess_trt(img, output, conf_th, output_layout=7):
         x2 = int(output[prefix+5] * img_w)
         y2 = int(output[prefix+6] * img_h)
         cls = int(output[prefix+1])
-        boxes.append((x1, y1, x2, y2))
-        confs.append(conf)
-        clss.append(cls)
+        if cls == 1:
+            boxes.append([x1, y1, x2, y2])
+            confs.append(conf)
+            clss.append(cls)
     return boxes, confs, clss
 
 
