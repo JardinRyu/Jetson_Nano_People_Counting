@@ -1,5 +1,4 @@
 import cv2
-#import imutils
 import numpy as np
 import collections
 import threading
@@ -141,6 +140,7 @@ def associate_detections_to_trackers(detections, trackers, iou_threshold=0.3):
         for t, trk in enumerate(trackers):
             iou_matrix[d, t] = iou(det, trk)
 
+    #Hungarian Algorithm
     matched_indices = linear_assignment(-iou_matrix)
 
     unmatched_detections = []
@@ -261,11 +261,13 @@ def get_frame(condition):
                 xmin, ymin, xmax, ymax = boxes[d, :][0]
                 cy = int((ymin + ymax) / 2)
                 
+                #IN count
                 if  idstp[trk.id][0][1] < H // 2 and cy > H // 2 and trk.id not in idcnt:
                     incnt += 1
                     print("id: " + str(trk.id) + " - IN ")
                     idcnt.append(trk.id)
 
+                #OUT count
                 elif  idstp[trk.id][0][1] > H // 2 and cy < H // 2 and trk.id not in idcnt:
                     outcnt += 1
                     print("id: " + str(trk.id) + " - OUT ")
@@ -274,6 +276,7 @@ def get_frame(condition):
                 cv2.rectangle(img, (xmin, ymin), (xmax, ymax), (0, 0, 255), 2)
                 cv2.putText(img, "id: " + str(trk.id), (int(xmin) - 10, int(ymin) - 10), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
 
+        #Total, IN, OUT count & Line
         cv2.putText(img, "Total: " + str(len(trackers)), (15, 25), cv2.FONT_HERSHEY_DUPLEX, 0.7, (255, 255, 255), 1)
 
         cv2.line(img, (0, H // 2), (W, H // 2), (255, 0, 0), 3)
@@ -287,6 +290,7 @@ def get_frame(condition):
 
             trk.id = len(trackers)
 
+            #new tracker id & u, v
             u, v = trk.kf.x[0], trk.kf.x[1]
             idstp[trk.id].append([u, v])
 
