@@ -338,7 +338,7 @@ if __name__ == '__main__':
     cuda.init()  # init pycuda driver
 
     condition = threading.Condition()
-    trt_thread = TrtThread(condition, cam, model, conf_th=0.3)
+    trt_thread = TrtThread(condition, cam, model, conf_th=0.5)
     trt_thread.start()  # start the child thread
 
     get_frame(condition)
