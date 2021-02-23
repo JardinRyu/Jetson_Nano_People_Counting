@@ -4,7 +4,7 @@ import collections
 import threading
 import pycuda.driver as cuda
 
-from utils.detection import TrtSSD
+from utils.ssd import TrtSSD
 from filterpy.kalman import KalmanFilter
 from numba import jit
 from sklearn.utils.linear_assignment_ import linear_assignment
