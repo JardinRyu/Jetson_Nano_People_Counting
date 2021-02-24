@@ -27,14 +27,14 @@ Jetson Nano - JetPack 4.5
    ```
 
 ## Usage
-### Run from USB Camera
+1. Run from USB Camera
 
     ```shell
     # CameraID = 0  
     $ python3 usbcam_tracking.py
     ```
 
-### Run from MIPI Camera (ex. Raspberry pi Cam v2)
+2. Run from MIPI Camera (ex. Raspberry pi Cam v2)
 
     ```shell
     $ python3 mipicam_tracking.py
