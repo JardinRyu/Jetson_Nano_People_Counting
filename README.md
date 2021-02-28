@@ -1,4 +1,4 @@
-# Real-Time People Detection and Tracking on Jetson Nano
+# Real-Time People Tracking and Counting on Jetson Nano
 MobileNetV1-SSD based Person Detection + SORT Tracking
 
 ## Prerequisite
