@@ -1,6 +1,10 @@
 # Real-Time People Tracking and Counting on Jetson Nano
 MobileNetV1-SSD based Person Detection + SORT Tracking
 
+<p align="center">
+  <img width="500" height="373" src="media/output.gif">
+</p>
+
 ## Prerequisite
 
 Jetson Nano - JetPack 4.5
