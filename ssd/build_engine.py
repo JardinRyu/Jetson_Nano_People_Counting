@@ -285,15 +285,15 @@ def main():
         output_filename=spec['tmp_uff'],
         text=True,
         debug_mode=DEBUG_UFF)
-    with trt.Builder(TRT_LOGGER) as builder, builder.create_network() as network, trt.UffParser() as parser:
-        builder.max_workspace_size = 1 << 28
+    with trt.Builder(TRT_LOGGER) as builder, builder.create_network() as network, trt.UffParser() as parser, builder.create_builder_config() as config:
+        config.max_workspace_size = 1 << 28
         builder.max_batch_size = 1
-        builder.fp16_mode = True
+        #builder.fp16_mode = True
 
         parser.register_input('Input', INPUT_DIMS)
         parser.register_output('MarkOutput_0')
         parser.parse(spec['tmp_uff'], network)
-        engine = builder.build_cuda_engine(network)
+        engine = builder.build_engine(network, config)
 
         buf = engine.serialize()
         with open(spec['output_bin'], 'wb') as f:
