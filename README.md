@@ -43,6 +43,9 @@ Jetson Nano - JetPack 4.5
     ```shell
     $ python3 mipicam_tracking.py
     ```
+## Troubleshooting
+- [Error with tensorflow library](https://forums.developer.nvidia.com/t/modulenotfounderror-no-module-named-uff/155748/4)
+- [Find compatible tensorflow version](https://docs.nvidia.com/deeplearning/frameworks/install-tf-jetson-platform-release-notes/tf-jetson-rel.html#tf-jetson-rel)
 
 ## References
 - [tensorrt_demos](https://github.com/jkjung-avt/tensorrt_demos)
